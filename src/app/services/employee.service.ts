@@ -82,7 +82,7 @@ export class EmployeeService {
 
     if (searchParams.status) {
       filteredEmployees = filteredEmployees.filter(emp => 
-        emp.status.toLowerCase().includes(searchParams.status!.toLowerCase())
+        emp.status.toLowerCase() === searchParams.status!.toLowerCase()
       );
     }
 
