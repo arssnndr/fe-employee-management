@@ -1,0 +1,310 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Employee Management</h1>
+          <p class="text-gray-600">Kelola data karyawan perusahaan</p>
+        </div>
+        <button (click)="logout()"
+          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Search and Filters -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <!-- Search Term -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Cari Karyawan
+          </label>
+          <input type="text" [(ngModel)]="searchParams.searchTerm" (input)="onSearch()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Nama, username, atau email..." />
+        </div>
+
+        <!-- Status Filter -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Status
+          </label>
+          <select [(ngModel)]="searchParams.status" (change)="onSearch()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option value="">Semua Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="On Leave">On Leave</option>
+            <option value="Probation">Probation</option>
+          </select>
+        </div>
+
+        <!-- Group Filter -->
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Grup/Departemen
+          </label>
+          <div class="relative">
+            <input type="text" [(ngModel)]="groupSearchTerm" (input)="filterGroups()" (focus)="showGroupDropdown = true"
+              (blur)="showGroupDropdown = false"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Pilih atau ketik grup..." />
+            <button *ngIf="searchParams.group" (click)="clearGroupFilter()"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            <div *ngIf="showGroupDropdown && filteredGroups.length > 0"
+              class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+              <div *ngFor="let group of filteredGroups" (click)="selectGroup(group)"
+                class="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm">
+                {{ group.name }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Page Size -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Data per Halaman
+          </label>
+          <select [(ngModel)]="pagination.pageSize" (change)="onPageSizeChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">
+              {{ size }} data
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Add Employee Button -->
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">
+          Menampilkan {{ pagination.totalItems }} karyawan
+        </div>
+        <button (click)="addEmployee()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Tambah Karyawan
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="bg-white rounded-lg shadow p-8 text-center">
+      <div class="animate-spin mx-auto h-8 w-8 text-blue-600">
+        <svg class="w-full h-full" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+      </div>
+      <p class="mt-2 text-gray-600">Memuat data karyawan...</p>
+    </div>
+
+    <!-- Employee Table -->
+    <div *ngIf="!isLoading" class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th (click)="onSort('firstName')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <div class="flex items-center">
+                  Nama
+                  <span class="ml-1">{{ getSortIcon("firstName") }}</span>
+                </div>
+              </th>
+              <th (click)="onSort('username')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <div class="flex items-center">
+                  Username
+                  <span class="ml-1">{{ getSortIcon("username") }}</span>
+                </div>
+              </th>
+              <th (click)="onSort('email')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <div class="flex items-center">
+                  Email
+                  <span class="ml-1">{{ getSortIcon("email") }}</span>
+                </div>
+              </th>
+              <th (click)="onSort('group')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <div class="flex items-center">
+                  Grup
+                  <span class="ml-1">{{ getSortIcon("group") }}</span>
+                </div>
+              </th>
+              <th (click)="onSort('basicSalary')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <div class="flex items-center">
+                  Gaji Pokok
+                  <span class="ml-1">{{ getSortIcon("basicSalary") }}</span>
+                </div>
+              </th>
+              <th (click)="onSort('status')"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <div class="flex items-center">
+                  Status
+                  <span class="ml-1">{{ getSortIcon("status") }}</span>
+                </div>
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Aksi
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let employee of employees; trackBy: trackByEmployeeId" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                      <span class="text-sm font-medium text-gray-700">
+                        {{ employee.firstName.charAt(0)
+                        }}{{ employee.lastName.charAt(0) }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ employee.firstName }} {{ employee.lastName }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      ID: {{ employee.id }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ employee.username }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ employee.email }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ employee.group }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ formatCurrency(employee.basicSalary) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span [class]="
+                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full ' +
+                    getStatusClass(employee.status)
+                  ">
+                  {{ employee.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                <button (click)="viewEmployeeDetail(employee.id!)"
+                  class="text-blue-600 hover:text-blue-900 transition-colors">
+                  Detail
+                </button>
+                <button (click)="onEdit(employee)" class="text-yellow-600 hover:text-yellow-900 transition-colors">
+                  Edit
+                </button>
+                <button (click)="onDelete(employee)" class="text-red-600 hover:text-red-900 transition-colors">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="employees.length === 0" class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">
+          Tidak ada karyawan
+        </h3>
+        <p class="mt-1 text-sm text-gray-500">
+          Mulai dengan menambahkan karyawan baru.
+        </p>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="employees.length > 0"
+        class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+        <div class="flex-1 flex justify-between sm:hidden">
+          <button [disabled]="pagination.currentPage === 1" (click)="onPageChange(pagination.currentPage - 1)"
+            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            Previous
+          </button>
+          <button [disabled]="pagination.currentPage === pagination.totalPages"
+            (click)="onPageChange(pagination.currentPage + 1)"
+            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            Next
+          </button>
+        </div>
+        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-gray-700">
+              Menampilkan
+              <span class="font-medium">{{
+                (pagination.currentPage - 1) * pagination.pageSize + 1
+                }}</span>
+              sampai
+              <span class="font-medium">{{
+                Math.min(
+                pagination.currentPage * pagination.pageSize,
+                pagination.totalItems
+                )
+                }}</span>
+              dari
+              <span class="font-medium">{{ pagination.totalItems }}</span>
+              hasil
+            </p>
+          </div>
+          <div>
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              <button [disabled]="pagination.currentPage === 1" (click)="onPageChange(pagination.currentPage - 1)"
+                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="sr-only">Previous</span>
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+              <button *ngFor="let page of getPaginationPages()" (click)="onPageChange(page)" [class]="
+                  'relative inline-flex items-center px-4 py-2 border text-sm font-medium ' +
+                  (page === pagination.currentPage
+                    ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50')
+                ">
+                {{ page }}
+              </button>
+              <button [disabled]="pagination.currentPage === pagination.totalPages"
+                (click)="onPageChange(pagination.currentPage + 1)"
+                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="sr-only">Next</span>
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
