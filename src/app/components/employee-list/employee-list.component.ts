@@ -9,7 +9,7 @@ import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams } from '.
 
 @Component({
   selector: 'app-employee-list',
-imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './employee-list.component.html'
 })
 export class EmployeeListComponent implements OnInit {
@@ -41,13 +41,13 @@ export class EmployeeListComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.groups = this.employeeService.getGroups();
     this.filteredGroups = [...this.groups];
     this.loadEmployees();
-    
+
     // Restore previous search parameters
     const savedParams = this.employeeService.getCurrentSearchParams();
     if (savedParams) {
@@ -101,7 +101,7 @@ export class EmployeeListComponent implements OnInit {
 
   filterGroups(): void {
     const term = this.groupSearchTerm.toLowerCase();
-    this.filteredGroups = this.groups.filter(group => 
+    this.filteredGroups = this.groups.filter(group =>
       group.name.toLowerCase().includes(term)
     );
   }
@@ -125,18 +125,18 @@ export class EmployeeListComponent implements OnInit {
     const maxPages = 5;
     const totalPages = this.pagination.totalPages;
     const currentPage = this.pagination.currentPage;
-    
+
     let startPage = Math.max(1, currentPage - Math.floor(maxPages / 2));
     let endPage = Math.min(totalPages, startPage + maxPages - 1);
-    
+
     if (endPage - startPage < maxPages - 1) {
       startPage = Math.max(1, endPage - maxPages + 1);
     }
-    
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
-    
+
     return pages;
   }
 
@@ -195,6 +195,13 @@ export class EmployeeListComponent implements OnInit {
         return 'bg-gray-100 text-gray-800';
     }
   }
+
+  onInputBlur() {
+    setTimeout(() => {
+      this.showGroupDropdown = false;
+    }, 150);
+  }
+
 
   // Make Math available in template
   Math = Math;
