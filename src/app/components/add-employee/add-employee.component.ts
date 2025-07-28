@@ -199,4 +199,10 @@ export class AddEmployeeComponent implements OnInit {
       minimumFractionDigits: 0
     }).format(amount);
   }
+
+  onInputBlur() {
+    setTimeout(() => {
+      this.showGroupDropdown = false;
+    }, 150);
+  }
 }

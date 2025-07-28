@@ -127,7 +127,7 @@
             </label>
             <div class="relative">
               <input type="text" id="group" name="group" [(ngModel)]="groupSearchTerm" (input)="filterGroups()"
-                (focus)="showGroupDropdown = true" (blur)="showGroupDropdown = false" required
+                (focus)="showGroupDropdown = true" (blur)="onInputBlur()" required
                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 [class.border-red-500]="formErrors.group" placeholder="Pilih atau ketik grup..." />
 
