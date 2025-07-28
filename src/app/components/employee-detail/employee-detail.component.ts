@@ -48,7 +48,7 @@ this.employee = this.employeeService.getEmployeeById(id) || null;
   }
 
   goBack(): void {
-    this.router.navigate(['/employees']);
+    window.history.back();
   }
 
   formatCurrency(amount: number): string {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
@@ -40,6 +40,7 @@ export class EmployeeListComponent implements OnInit {
     private employeeService: EmployeeService,
     private authService: AuthService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private notificationService: NotificationService
   ) { }
 
@@ -48,11 +49,14 @@ export class EmployeeListComponent implements OnInit {
     this.filteredGroups = [...this.groups];
     this.loadEmployees();
 
-    // Restore previous search parameters
-    const savedParams = this.employeeService.getCurrentSearchParams();
-    if (savedParams) {
-      this.searchParams = { ...savedParams };
-    }
+    // Ambil keyword dari URL saat komponen diinisialisasi
+    this.activatedRoute.queryParams
+      .subscribe(params => {
+        this.searchParams.searchTerm = params['search'] || '';
+        if (this.searchParams.searchTerm) {
+          this.loadEmployees();
+        }
+      });
   }
 
   loadEmployees(): void {
@@ -75,8 +79,17 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onSearch(): void {
+    this.updateUrlWithSearchKeyword(this.searchParams.searchTerm);
     this.pagination.currentPage = 1;
     this.loadEmployees();
+  }
+
+  updateUrlWithSearchKeyword(keyword: string | undefined): void {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { search: keyword || null },
+      queryParamsHandling: 'merge'
+    });
   }
 
   onSort(column: string): void {
@@ -164,7 +177,8 @@ export class EmployeeListComponent implements OnInit {
   }
 
   viewEmployeeDetail(employeeId: number): void {
-    this.router.navigate(['/employees', employeeId]);
+    // this.router.navigate(['/employees', employeeId]);
+    window.location.assign(`employees/${employeeId}`);
   }
 
   addEmployee(): void {

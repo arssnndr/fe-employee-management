@@ -7,7 +7,6 @@ import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams } from '.
 })
 export class EmployeeService {
   private employees: Employee[] = [];
-  private currentSearchParams: EmployeeSearchParams = {};
   private employeesSubject = new BehaviorSubject<Employee[]>([]);
   public employees$ = this.employeesSubject.asObservable();
 
@@ -66,7 +65,6 @@ export class EmployeeService {
   }
 
   getEmployees(page: number = 1, pageSize: number = 10, searchParams: EmployeeSearchParams = {}): Observable<{employees: Employee[], pagination: PaginationData}> {
-    this.currentSearchParams = searchParams;
     let filteredEmployees = [...this.employees];
 
     // Apply search filters
@@ -149,9 +147,5 @@ export class EmployeeService {
 
   getGroups(): EmployeeGroup[] {
     return this.groups;
-  }
-
-  getCurrentSearchParams(): EmployeeSearchParams {
-    return this.currentSearchParams;
   }
 }
