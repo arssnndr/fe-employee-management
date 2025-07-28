@@ -59,7 +59,7 @@ export class EmployeeListComponent implements OnInit {
     this.isLoading = true;
     this.employeeService.getEmployees(
       this.pagination.currentPage,
-      this.pagination.pageSize,
+      Number(this.pagination.pageSize),
       this.searchParams
     ).subscribe({
       next: (result) => {

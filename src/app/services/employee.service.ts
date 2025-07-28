@@ -34,7 +34,7 @@ export class EmployeeService {
     const statuses = ['Active', 'Inactive', 'On Leave', 'Probation'];
     const domains = ['gmail.com', 'yahoo.com', 'company.com', 'outlook.com'];
 
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 125; i++) {
       const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
       const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
       const group = this.groups[Math.floor(Math.random() * this.groups.length)];
