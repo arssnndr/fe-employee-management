@@ -13,6 +13,7 @@ import { Employee, EmployeeGroup } from '../../models/employee.interface';
 })
 export class AddEmployeeComponent implements OnInit {
   employee: Employee = {
+    id: 0,
     username: '',
     firstName: '',
     lastName: '',

@@ -28,6 +28,21 @@ export class EmployeeService {
   }
 
   private generateDummyData(): void {
+    const existingData = localStorage.getItem('employeeData');
+
+    if (existingData) {
+      try {
+        this.employees = JSON.parse(existingData);
+        this.employees.forEach(emp => {
+          emp.birthDate = new Date(emp.birthDate);
+        });
+        this.employeesSubject.next(this.employees);
+        return;
+      } catch (error) {
+        console.warn('Error parsing employee data from localStorage:', error);
+      }
+    }
+
     const firstNames = ['Ahmad', 'Siti', 'Budi', 'Andi', 'Dewi', 'Rizki', 'Lina', 'Joko', 'Maya', 'Rudi', 'Indira', 'Fajar', 'Ratna', 'Dian', 'Eko', 'Wulan', 'Agus', 'Putri', 'Hendra', 'Sari'];
     const lastNames = ['Pratama', 'Sari', 'Wijaya', 'Kusuma', 'Lestari', 'Santoso', 'Anggraini', 'Hidayat', 'Permata', 'Setiawan', 'Maharani', 'Nugroho', 'Indah', 'Gunawan', 'Safitri', 'Wahyudi', 'Rahayu', 'Putra', 'Handayani', 'Wibowo'];
     const statuses = ['Active', 'Inactive', 'On Leave', 'Probation'];
@@ -39,7 +54,7 @@ export class EmployeeService {
       const group = this.groups[Math.floor(Math.random() * this.groups.length)];
       const status = statuses[Math.floor(Math.random() * statuses.length)];
       const domain = domains[Math.floor(Math.random() * domains.length)];
-      
+
       const birthDate = new Date();
       birthDate.setFullYear(birthDate.getFullYear() - (20 + Math.floor(Math.random() * 40)));
       birthDate.setMonth(Math.floor(Math.random() * 12));
@@ -57,20 +72,26 @@ export class EmployeeService {
         group: group.name,
         description: `Employee ${firstName} ${lastName} working in ${group.name} department with ${status} status.`
       };
-      
+
       this.employees.push(employee);
     }
-    
+
+    try {
+      localStorage.setItem('employeeData', JSON.stringify(this.employees));
+    } catch (error) {
+      console.warn('Error saving employee data to localStorage:', error);
+    }
+
     this.employeesSubject.next(this.employees);
   }
 
-  getEmployees(page: number = 1, pageSize: number = 10, searchParams: EmployeeSearchParams = {}): Observable<{employees: Employee[], pagination: PaginationData}> {
+  getEmployees(page: number = 1, pageSize: number = 10, searchParams: EmployeeSearchParams = {}): Observable<{ employees: Employee[], pagination: PaginationData }> {
     let filteredEmployees = [...this.employees];
 
     // Apply search filters
     if (searchParams.searchTerm) {
       const term = searchParams.searchTerm.toLowerCase();
-      filteredEmployees = filteredEmployees.filter(emp => 
+      filteredEmployees = filteredEmployees.filter(emp =>
         emp.firstName.toLowerCase().includes(term) ||
         emp.lastName.toLowerCase().includes(term) ||
         emp.username.toLowerCase().includes(term) ||
@@ -79,13 +100,13 @@ export class EmployeeService {
     }
 
     if (searchParams.status) {
-      filteredEmployees = filteredEmployees.filter(emp => 
+      filteredEmployees = filteredEmployees.filter(emp =>
         emp.status.toLowerCase() === searchParams.status!.toLowerCase()
       );
     }
 
     if (searchParams.group) {
-      filteredEmployees = filteredEmployees.filter(emp => 
+      filteredEmployees = filteredEmployees.filter(emp =>
         emp.group.toLowerCase().includes(searchParams.group!.toLowerCase())
       );
     }
@@ -95,11 +116,11 @@ export class EmployeeService {
       filteredEmployees.sort((a, b) => {
         const aValue = (a as any)[searchParams.sortBy!];
         const bValue = (b as any)[searchParams.sortBy!];
-        
+
         let comparison = 0;
         if (aValue > bValue) comparison = 1;
         if (aValue < bValue) comparison = -1;
-        
+
         return searchParams.sortDirection === 'desc' ? -comparison : comparison;
       });
     }
@@ -118,7 +139,7 @@ export class EmployeeService {
       totalPages: totalPages
     };
 
-    return new BehaviorSubject({employees: paginatedEmployees, pagination}).asObservable();
+    return new BehaviorSubject({ employees: paginatedEmployees, pagination }).asObservable();
   }
 
   getEmployeeById(id: number): Employee | undefined {
@@ -129,6 +150,7 @@ export class EmployeeService {
     const newId = Math.max(...this.employees.map(e => e.id || 0)) + 1;
     employee.id = newId;
     this.employees.push(employee);
+    this.updateLocalStorage();
     this.employeesSubject.next(this.employees);
   }
 
@@ -136,16 +158,26 @@ export class EmployeeService {
     const index = this.employees.findIndex(emp => emp.id === employee.id);
     if (index !== -1) {
       this.employees[index] = employee;
+      this.updateLocalStorage();
       this.employeesSubject.next(this.employees);
     }
   }
 
   deleteEmployee(id: number): void {
     this.employees = this.employees.filter(emp => emp.id !== id);
+    this.updateLocalStorage();
     this.employeesSubject.next(this.employees);
   }
 
   getGroups(): EmployeeGroup[] {
     return this.groups;
+  }
+
+  private updateLocalStorage(): void {
+    try {
+      localStorage.setItem('employeeData', JSON.stringify(this.employees));
+    } catch (error) {
+      console.warn('Error updating employee data in localStorage:', error);
+    }
   }
 }
