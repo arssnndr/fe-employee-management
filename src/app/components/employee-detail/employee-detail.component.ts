@@ -3,16 +3,22 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notification.service';
-import { Employee } from '../../models/employee.interface';
+import { ButtonConfig, Employee } from '../../models/employee.interface';
+import { HeaderComponent } from '../../shared/header/header.component';
 
 @Component({
   selector: 'app-employee-detail',
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './employee-detail.component.html'
 })
 export class EmployeeDetailComponent implements OnInit {
   employee: Employee | null = null;
   isLoading = true;
+
+  buttonConfig: ButtonConfig = {
+    classStyle: 'bg-blue-600 hover:bg-blue-700 text-white',
+    label: 'Kembali'
+  }
 
   constructor(
     private route: ActivatedRoute,

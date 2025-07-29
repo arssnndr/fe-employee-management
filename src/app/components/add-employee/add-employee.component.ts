@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notification.service';
-import { Employee, EmployeeGroup } from '../../models/employee.interface';
+import { ButtonConfig, Employee, EmployeeGroup } from '../../models/employee.interface';
+import { HeaderComponent } from '../../shared/header/header.component';
 
 @Component({
   selector: 'app-add-employee',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './add-employee.component.html'
 })
 export class AddEmployeeComponent implements OnInit {
@@ -43,6 +44,11 @@ export class AddEmployeeComponent implements OnInit {
     group: '',
     description: ''
   };
+
+  buttonConfig: ButtonConfig = {
+    classStyle: 'bg-gray-600 hover:bg-gray-700 text-white',
+    label: 'Kembali'
+  }
 
   constructor(
     private employeeService: EmployeeService,

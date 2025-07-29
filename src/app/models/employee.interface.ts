@@ -30,3 +30,8 @@ export interface EmployeeSearchParams {
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }
+
+export interface ButtonConfig {
+  classStyle: string;
+  label: string;
+}

@@ -5,11 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
-import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams } from '../../models/employee.interface';
+import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams, ButtonConfig } from '../../models/employee.interface';
+import { HeaderComponent } from "../../shared/header/header.component";
 
 @Component({
   selector: 'app-employee-list',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './employee-list.component.html'
 })
 export class EmployeeListComponent implements OnInit {
@@ -35,6 +36,11 @@ export class EmployeeListComponent implements OnInit {
   filteredGroups: EmployeeGroup[] = [];
   groupSearchTerm = '';
   showGroupDropdown = false;
+
+  buttonConfig: ButtonConfig = {
+    classStyle: 'bg-red-600 hover:bg-red-700 text-white',
+    label: 'Logout',
+  }
 
   constructor(
     private employeeService: EmployeeService,
