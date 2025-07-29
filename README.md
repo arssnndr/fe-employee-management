@@ -2,6 +2,17 @@
 
 Sistem manajemen karyawan yang dibangun menggunakan Angular 19, SCSS, dan Tailwind CSS.
 
+## Demo Apps
+
+- [Live Demo](https://www.port-aris.my.id/login)
+
+### Preview:
+
+- <img src="https://www.port-aris.my.id/assets/images/login-page.png" alt="Login Page">
+- <img src="https://www.port-aris.my.id/assets/images/list-page.png" alt="List Page">
+- <img src="https://www.port-aris.my.id/assets/images/add-page.png" alt="Add Page">
+- <img src="https://www.port-aris.my.id/assets/images/detail-page.png" alt="Detail Page">
+
 ## 🚀 Fitur
 
 ### 1. **Login Page**
