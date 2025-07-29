@@ -6,12 +6,16 @@ Sistem manajemen karyawan yang dibangun menggunakan Angular 19, SCSS, dan Tailwi
 
 - [Live Demo](https://www.port-aris.my.id/login)
 
-### Preview:
+## Preview:
 
-- <img src="https://www.port-aris.my.id/assets/images/login-page.png" alt="Login Page">
-- <img src="https://www.port-aris.my.id/assets/images/list-page.png" alt="List Page">
-- <img src="https://www.port-aris.my.id/assets/images/add-page.png" alt="Add Page">
-- <img src="https://www.port-aris.my.id/assets/images/detail-page.png" alt="Detail Page">
+<p align="center">Login Page:</p>
+<img src="https://www.port-aris.my.id/assets/images/login-page.png" alt="Login Page">
+<p align="center">List Employee:</p>
+<img src="https://www.port-aris.my.id/assets/images/list-page.png" alt="List Page">
+<p align="center">Add Employee:</p>
+<img src="https://www.port-aris.my.id/assets/images/add-page.png" alt="Add Page">
+<p align="center">Detail Employee:</p>
+<img src="https://www.port-aris.my.id/assets/images/detail-page.png" alt="Detail Page">
 
 ## 🚀 Fitur
 
