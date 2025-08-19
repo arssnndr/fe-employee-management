@@ -7,7 +7,7 @@ import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-login',
-imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
@@ -15,14 +15,14 @@ export class LoginComponent implements OnInit {
     username: '',
     password: ''
   };
-  
+
   isLoading = false;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Redirect if already logged in
@@ -32,25 +32,27 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.isLoading = true;
+
     if (!this.loginData.username || !this.loginData.password) {
       this.notificationService.error('Username dan password harus diisi!');
       return;
     }
 
-    this.isLoading = true;
-    
-    // Simulate loading delay
-    setTimeout(() => {
-      const success = this.authService.login(this.loginData.username, this.loginData.password);
-      
-      if (success) {
-        this.notificationService.success('Login berhasil!');
-        this.router.navigate(['/employees']);
-      } else {
-        this.notificationService.error('Username atau password salah!');
+    this.authService.login(this.loginData.username, this.loginData.password).subscribe({
+      next: (success) => {
+        if (success) {
+          this.notificationService.success('Login berhasil!');
+          this.router.navigate(['/employees']);
+        } else {
+          this.notificationService.error('Username atau password salah!');
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.notificationService.error('Terjadi kesalahan saat login');
+        this.isLoading = false;
       }
-      
-      this.isLoading = false;
-    }, 1000);
+    });
   }
 }
