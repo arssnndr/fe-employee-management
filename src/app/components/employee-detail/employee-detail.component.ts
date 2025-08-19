@@ -39,18 +39,17 @@ export class EmployeeDetailComponent implements OnInit {
 
   loadEmployee(id: number): void {
     this.isLoading = true;
-    
-    // Simulate loading delay
-    setTimeout(() => {
-this.employee = this.employeeService.getEmployeeById(id) || null;
-      
-      if (!this.employee) {
+    this.employeeService.getEmployeeById(id).subscribe({
+      next: (emp) => {
+        this.employee = emp;
+        this.isLoading = false;
+      },
+      error: () => {
         this.notificationService.error('Karyawan tidak ditemukan');
+        this.isLoading = false;
         this.goBack();
       }
-      
-      this.isLoading = false;
-    }, 500);
+    });
   }
 
   goBack(): void {

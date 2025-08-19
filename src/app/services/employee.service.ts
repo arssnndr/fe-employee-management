@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams } from '../models/employee.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,150 +25,107 @@ export class EmployeeService {
     { id: 10, name: 'Project Management' }
   ];
 
-  constructor() {
-    this.generateDummyData();
-  }
+  constructor(private http: HttpClient) {}
 
-  private generateDummyData(): void {
-    const existingData = localStorage.getItem('employeeData');
-
-    if (existingData) {
-      try {
-        this.employees = JSON.parse(existingData);
-        this.employees.forEach(emp => {
-          emp.birthDate = new Date(emp.birthDate);
-        });
-        this.employeesSubject.next(this.employees);
-        return;
-      } catch (error) {
-        console.warn('Error parsing employee data from localStorage:', error);
-      }
-    }
-
-    const firstNames = ['Ahmad', 'Siti', 'Budi', 'Andi', 'Dewi', 'Rizki', 'Lina', 'Joko', 'Maya', 'Rudi', 'Indira', 'Fajar', 'Ratna', 'Dian', 'Eko', 'Wulan', 'Agus', 'Putri', 'Hendra', 'Sari'];
-    const lastNames = ['Pratama', 'Sari', 'Wijaya', 'Kusuma', 'Lestari', 'Santoso', 'Anggraini', 'Hidayat', 'Permata', 'Setiawan', 'Maharani', 'Nugroho', 'Indah', 'Gunawan', 'Safitri', 'Wahyudi', 'Rahayu', 'Putra', 'Handayani', 'Wibowo'];
-    const statuses = ['Active', 'Inactive', 'On Leave', 'Probation'];
-    const domains = ['gmail.com', 'yahoo.com', 'company.com', 'outlook.com'];
-
-    for (let i = 1; i <= 125; i++) {
-      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-      const group = this.groups[Math.floor(Math.random() * this.groups.length)];
-      const status = statuses[Math.floor(Math.random() * statuses.length)];
-      const domain = domains[Math.floor(Math.random() * domains.length)];
-
-      const birthDate = new Date();
-      birthDate.setFullYear(birthDate.getFullYear() - (20 + Math.floor(Math.random() * 40)));
-      birthDate.setMonth(Math.floor(Math.random() * 12));
-      birthDate.setDate(Math.floor(Math.random() * 28) + 1);
-
-      const employee: Employee = {
-        id: i,
-        username: `${firstName.toLowerCase()}${lastName.toLowerCase()}${i}`,
-        firstName: firstName,
-        lastName: lastName,
-        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`,
-        birthDate: birthDate,
-        basicSalary: Math.floor(Math.random() * 15000000) + 5000000, // 5-20 juta
-        status: status,
-        group: group.name,
-        description: `Employee ${firstName} ${lastName} working in ${group.name} department with ${status} status.`
-      };
-
-      this.employees.push(employee);
-    }
-
-    try {
-      localStorage.setItem('employeeData', JSON.stringify(this.employees));
-    } catch (error) {
-      console.warn('Error saving employee data to localStorage:', error);
-    }
-
-    this.employeesSubject.next(this.employees);
+  // Map field sorting from UI (camelCase) to DB columns (snake_case)
+  private mapSortField(field?: string): string | undefined {
+    if (!field) return undefined;
+    const mapping: Record<string, string> = {
+      firstName: 'first_name',
+      lastName: 'last_name',
+      basicSalary: 'basic_salary',
+      birthDate: 'birth_date',
+      group: 'group_name',
+      username: 'username',
+      email: 'email',
+      status: 'status'
+    };
+    return mapping[field] || field;
   }
 
   getEmployees(page: number = 1, pageSize: number = 10, searchParams: EmployeeSearchParams = {}): Observable<{ employees: Employee[], pagination: PaginationData }> {
-    let filteredEmployees = [...this.employees];
+    let params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
 
-    // Apply search filters
-    if (searchParams.searchTerm) {
-      const term = searchParams.searchTerm.toLowerCase();
-      filteredEmployees = filteredEmployees.filter(emp =>
-        emp.firstName.toLowerCase().includes(term) ||
-        emp.lastName.toLowerCase().includes(term) ||
-        emp.username.toLowerCase().includes(term) ||
-        emp.email.toLowerCase().includes(term)
-      );
-    }
+    if (searchParams.searchTerm) params = params.set('searchTerm', searchParams.searchTerm);
+    if (searchParams.status) params = params.set('status', searchParams.status);
+    if (searchParams.group) params = params.set('group', searchParams.group);
+    if (searchParams.sortBy) params = params.set('sortBy', this.mapSortField(searchParams.sortBy)!);
+    if (searchParams.sortDirection) params = params.set('sortDirection', searchParams.sortDirection);
 
-    if (searchParams.status) {
-      filteredEmployees = filteredEmployees.filter(emp =>
-        emp.status.toLowerCase() === searchParams.status!.toLowerCase()
-      );
-    }
+    return this.http.get<any>(`${environment.API_BASE_URL}/employees`, { params }).pipe(
+      map((res) => ({
+        employees: (res.employees || []).map((e: any): Employee => ({
+          id: e.id,
+          username: e.username,
+          firstName: e.first_name,
+          lastName: e.last_name,
+          email: e.email,
+          birthDate: new Date(e.birth_date),
+          basicSalary: e.basic_salary,
+          status: e.status,
+          group: e.group_name,
+          description: e.description,
+        })),
+        pagination: res.pagination as PaginationData
+      }))
+    );
+  }
 
-    if (searchParams.group) {
-      filteredEmployees = filteredEmployees.filter(emp =>
-        emp.group.toLowerCase().includes(searchParams.group!.toLowerCase())
-      );
-    }
+  getEmployeeById(id: number): Observable<Employee> {
+    return this.http.get<any>(`${environment.API_BASE_URL}/employees/${id}`).pipe(
+      map((e: any): Employee => ({
+        id: e.id,
+        username: e.username,
+        firstName: e.first_name,
+        lastName: e.last_name,
+        email: e.email,
+        birthDate: new Date(e.birth_date),
+        basicSalary: e.basic_salary,
+        status: e.status,
+        group: e.group_name,
+        description: e.description,
+      }))
+    );
+  }
 
-    // Apply sorting
-    if (searchParams.sortBy) {
-      filteredEmployees.sort((a, b) => {
-        const aValue = (a as any)[searchParams.sortBy!];
-        const bValue = (b as any)[searchParams.sortBy!];
-
-        let comparison = 0;
-        if (aValue > bValue) comparison = 1;
-        if (aValue < bValue) comparison = -1;
-
-        return searchParams.sortDirection === 'desc' ? -comparison : comparison;
-      });
-    }
-
-    // Apply pagination
-    const totalItems = filteredEmployees.length;
-    const totalPages = Math.ceil(totalItems / pageSize);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    const paginatedEmployees = filteredEmployees.slice(startIndex, endIndex);
-
-    const pagination: PaginationData = {
-      currentPage: page,
-      pageSize: pageSize,
-      totalItems: totalItems,
-      totalPages: totalPages
+  addEmployee(employee: Employee): Observable<Employee> {
+    // Backend expects camelCase payload and will map to DB columns
+    const payload = {
+      username: employee.username,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      email: employee.email,
+      birthDate: employee.birthDate,
+      basicSalary: employee.basicSalary,
+      status: employee.status,
+      group: employee.group,
+      description: employee.description
     };
-
-    return new BehaviorSubject({ employees: paginatedEmployees, pagination }).asObservable();
-  }
-
-  getEmployeeById(id: number): Employee | undefined {
-    return this.employees.find(emp => emp.id === id);
-  }
-
-  addEmployee(employee: Employee): void {
-    const newId = Math.max(...this.employees.map(e => e.id || 0)) + 1;
-    employee.id = newId;
-    this.employees.push(employee);
-    this.updateLocalStorage();
-    this.employeesSubject.next(this.employees);
+    return this.http.post<any>(`${environment.API_BASE_URL}/employees`, payload).pipe(
+      map((e: any): Employee => ({
+        id: e.id,
+        username: e.username,
+        firstName: e.first_name,
+        lastName: e.last_name,
+        email: e.email,
+        birthDate: new Date(e.birth_date),
+        basicSalary: e.basic_salary,
+        status: e.status,
+        group: e.group_name,
+        description: e.description,
+      }))
+    );
   }
 
   updateEmployee(employee: Employee): void {
-    const index = this.employees.findIndex(emp => emp.id === employee.id);
-    if (index !== -1) {
-      this.employees[index] = employee;
-      this.updateLocalStorage();
-      this.employeesSubject.next(this.employees);
-    }
+    // Not implemented in backend sample; implement when API available (PUT/PATCH)
+    console.warn('updateEmployee not implemented on API');
   }
 
-  deleteEmployee(id: number): void {
-    this.employees = this.employees.filter(emp => emp.id !== id);
-    this.updateLocalStorage();
-    this.employeesSubject.next(this.employees);
+  deleteEmployee(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.API_BASE_URL}/employees/${id}`);
   }
 
   getGroups(): EmployeeGroup[] {
@@ -174,10 +133,6 @@ export class EmployeeService {
   }
 
   private updateLocalStorage(): void {
-    try {
-      localStorage.setItem('employeeData', JSON.stringify(this.employees));
-    } catch (error) {
-      console.warn('Error updating employee data in localStorage:', error);
-    }
+    // No-op: local storage no longer used when integrated with API
   }
 }

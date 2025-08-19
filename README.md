@@ -21,18 +21,19 @@ Sistem manajemen karyawan yang dibangun menggunakan Angular 19, SCSS, dan Tailwi
 
 ### 1. **Login Page**
 - Input username dan password dengan validasi
-- Navigasi yang fungsional dengan autentikasi
+- Autentikasi terintegrasi dengan backend API (`POST /api/auth/login`)
 - Demo credentials tersedia di halaman login
 - Responsif untuk semua ukuran device
 
 ### 2. **Employee List Page**
-- Menampilkan 100 dummy data karyawan Indonesia
+- Data karyawan diambil dari backend API
 - **Pagination** dengan pilihan jumlah data per halaman (10, 25, 50, 100)
 - **Sorting** untuk semua kolom dengan indikator arah sorting
-- **Searching** dengan 2 parameter (AND rule):
+- **Searching & Filter** (AND rule):
   - Search term: nama, username, atau email
   - Filter status: Active, Inactive, On Leave, Probation
   - Filter grup/departemen dengan dropdown yang bisa dicari
+- Sinkronisasi query params ke URL: `?search=...&status=...&group=...&pageSize=...&page=...`
 - Button "Add Employee" untuk navigasi ke halaman tambah karyawan
 - Button aksi: Detail (biru), Edit (kuning), Delete (merah) dengan notifikasi berwarna
 - Format gaji dalam Rupiah Indonesia
@@ -127,6 +128,8 @@ src/
 ### Login Credentials
 - **Username**: `admin`
 - **Password**: `password123`
+  
+Catatan: Kredensial di atas berasal dari seed database backend.
 
 ## 🎨 Fitur UI/UX
 
@@ -139,11 +142,11 @@ src/
 
 ## 📊 Data Management
 
-- **100 Dummy Data** karyawan dengan nama Indonesia
-- **10 Dummy Groups** departemen/divisi
-- **In-memory Storage** dengan persistence di localStorage untuk autentikasi
+- **Employees dari API** (Postgres/Supabase melalui backend)
+- **10 Dummy Groups** departemen/divisi (statis di frontend)
+- **Autentikasi via API** dengan state login disimpan di localStorage
 - **Search & Filter** yang powerful dengan multiple criteria
-- **CRUD Operations** yang lengkap (Create, Read, Update, Delete)
+- **CRUD Operations** (Create, Read, Update, Delete) melalui API
 
 ## 🔒 Security Features
 
@@ -173,4 +176,4 @@ Dibuat sebagai demo Employee Management System menggunakan Angular 19.
 
 ---
 
-**Note**: Aplikasi ini menggunakan dummy data dan hardcoded authentication untuk keperluan demo.
+**Note**: Aplikasi ini telah terintegrasi dengan backend untuk autentikasi dan data karyawan. Grup/departemen masih disediakan statis di frontend.

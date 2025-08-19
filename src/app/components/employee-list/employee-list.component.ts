@@ -59,7 +59,20 @@ export class EmployeeListComponent implements OnInit {
     this.activatedRoute.queryParams
       .subscribe(params => {
         this.searchParams.searchTerm = params['search'] || '';
-        if (this.searchParams.searchTerm) {
+        this.searchParams.status = params['status'] || '';
+        this.searchParams.group = params['group'] || '';
+        const qpPageSize = params['pageSize'];
+        const qpPage = params['page'];
+        if (qpPageSize) {
+          this.pagination.pageSize = Number(qpPageSize);
+        }
+        if (qpPage) {
+          this.pagination.currentPage = Number(qpPage);
+        }
+        if (this.searchParams.group) {
+          this.groupSearchTerm = this.searchParams.group;
+        }
+        if (this.searchParams.searchTerm || this.searchParams.status || this.searchParams.group) {
           this.loadEmployees();
         }
       });
@@ -85,15 +98,19 @@ export class EmployeeListComponent implements OnInit {
   }
 
   onSearch(): void {
-    this.updateUrlWithSearchKeyword(this.searchParams.searchTerm);
+    this.updateUrlWithFilters(this.searchParams);
     this.pagination.currentPage = 1;
     this.loadEmployees();
   }
 
-  updateUrlWithSearchKeyword(keyword: string | undefined): void {
+  updateUrlWithFilters(params: EmployeeSearchParams): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { search: keyword || null },
+      queryParams: {
+        search: params.searchTerm || null,
+        status: params.status || null,
+        group: params.group || null
+      },
       queryParamsHandling: 'merge'
     });
   }
@@ -110,12 +127,30 @@ export class EmployeeListComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.pagination.currentPage = page;
+    this.updateUrlWithPage(page);
     this.loadEmployees();
   }
 
   onPageSizeChange(): void {
     this.pagination.currentPage = 1;
+    this.updateUrlWithPageSize(Number(this.pagination.pageSize));
     this.loadEmployees();
+  }
+
+  updateUrlWithPageSize(size: number): void {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { pageSize: size || null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  updateUrlWithPage(page: number): void {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { page: page || 1 },
+      queryParamsHandling: 'merge'
+    });
   }
 
   filterGroups(): void {
