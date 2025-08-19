@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams } from '../models/employee.interface';
-import { API_BASE_URL } from '../api.config';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +54,7 @@ export class EmployeeService {
     if (searchParams.sortBy) params = params.set('sortBy', this.mapSortField(searchParams.sortBy)!);
     if (searchParams.sortDirection) params = params.set('sortDirection', searchParams.sortDirection);
 
-    return this.http.get<any>(`${API_BASE_URL}/employees`, { params }).pipe(
+    return this.http.get<any>(`${environment.API_BASE_URL}/employees`, { params }).pipe(
       map((res) => ({
         employees: (res.employees || []).map((e: any): Employee => ({
           id: e.id,
@@ -74,7 +74,7 @@ export class EmployeeService {
   }
 
   getEmployeeById(id: number): Observable<Employee> {
-    return this.http.get<any>(`${API_BASE_URL}/employees/${id}`).pipe(
+    return this.http.get<any>(`${environment.API_BASE_URL}/employees/${id}`).pipe(
       map((e: any): Employee => ({
         id: e.id,
         username: e.username,
@@ -103,7 +103,7 @@ export class EmployeeService {
       group: employee.group,
       description: employee.description
     };
-    return this.http.post<any>(`${API_BASE_URL}/employees`, payload).pipe(
+    return this.http.post<any>(`${environment.API_BASE_URL}/employees`, payload).pipe(
       map((e: any): Employee => ({
         id: e.id,
         username: e.username,
@@ -125,7 +125,7 @@ export class EmployeeService {
   }
 
   deleteEmployee(id: number): Observable<void> {
-    return this.http.delete<void>(`${API_BASE_URL}/employees/${id}`);
+    return this.http.delete<void>(`${environment.API_BASE_URL}/employees/${id}`);
   }
 
   getGroups(): EmployeeGroup[] {

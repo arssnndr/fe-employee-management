@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
-import { API_BASE_URL } from '../api.config';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class AuthService {
 
   // Call backend API to login. Returns true if success, false otherwise.
   login(username: string, password: string): Observable<boolean> {
-    return this.http.post<{ message: string; user: any }>(`${API_BASE_URL}/auth/login`, { username, password }).pipe(
+    return this.http.post<{ message: string; user: any }>(`${environment.API_BASE_URL}/auth/login`, { username, password }).pipe(
       tap(() => {
         this.isAuthenticatedSubject.next(true);
         localStorage.setItem('isLoggedIn', 'true');
