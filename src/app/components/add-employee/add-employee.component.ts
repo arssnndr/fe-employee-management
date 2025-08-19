@@ -170,18 +170,20 @@ export class AddEmployeeComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Simulate loading delay
-    setTimeout(() => {
-      try {
-        this.employeeService.addEmployee(this.employee);
+    this.employeeService.addEmployee(this.employee).subscribe({
+      next: () => {
         this.notificationService.success(`Karyawan ${this.employee.firstName} ${this.employee.lastName} berhasil ditambahkan`);
         this.router.navigate(['/employees']);
-      } catch (error) {
-        this.notificationService.error('Gagal menambahkan karyawan');
-      } finally {
+      },
+      error: (err) => {
+        const message = err?.error?.message || 'Gagal menambahkan karyawan';
+        this.notificationService.error(message);
+        this.isLoading = false;
+      },
+      complete: () => {
         this.isLoading = false;
       }
-    }, 1000);
+    });
   }
 
   cancel(): void {
