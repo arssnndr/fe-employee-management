@@ -145,8 +145,8 @@ npm run build
 
 ### Login Credentials
 
-- **Username**: `admin`
-- **Password**: `password123`
+- **Username**: `admin1`
+- **Password**: `P@ssw0rd`
 
 Catatan: Kredensial di atas berasal dari seed database backend.
 
