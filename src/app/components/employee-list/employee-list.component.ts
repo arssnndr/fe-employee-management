@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,13 +7,15 @@ import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams, ButtonConfig } from '../../models/employee.interface';
 import { HeaderComponent } from "../../shared/header/header.component";
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee-list',
   imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './employee-list.component.html'
 })
-export class EmployeeListComponent implements OnInit {
+export class EmployeeListComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
   groups: EmployeeGroup[] = [];
   pagination: PaginationData = {
@@ -36,6 +38,10 @@ export class EmployeeListComponent implements OnInit {
   filteredGroups: EmployeeGroup[] = [];
   groupSearchTerm = '';
   showGroupDropdown = false;
+
+  // Debounce input search
+  private searchInput$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   buttonConfig: ButtonConfig = {
     classStyle: 'bg-red-600 hover:bg-red-700 text-white',
@@ -76,6 +82,18 @@ export class EmployeeListComponent implements OnInit {
           this.loadEmployees();
         }
       });
+
+    // Subscribe input pencarian dengan debounce
+    this.searchInput$
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((term: string) => {
+        this.searchParams.searchTerm = term;
+        this.onSearch();
+      });
   }
 
   loadEmployees(): void {
@@ -95,6 +113,11 @@ export class EmployeeListComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  // Handler input ketikan untuk pencarian dengan debounce
+  onSearchInput(value: string): void {
+    this.searchInput$.next(value ?? '');
   }
 
   onSearch(): void {
@@ -260,4 +283,9 @@ export class EmployeeListComponent implements OnInit {
 
   // Make Math available in template
   Math = Math;
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
