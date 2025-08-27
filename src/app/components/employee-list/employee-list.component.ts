@@ -38,9 +38,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
 
   pageSizeOptions = [10, 25, 50, 100];
   isLoading = false;
-  filteredGroups: EmployeeGroup[] = [];
-  groupSearchTerm = '';
-  showGroupDropdown = false;
+  // GroupAutocomplete now handles its own filtering and dropdown
 
   // Debounce input search
   private searchInput$ = new Subject<string>();
@@ -61,7 +59,6 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.groups = this.employeeService.getGroups();
-    this.filteredGroups = [...this.groups];
     this.loadEmployees();
 
     // Ambil keyword dari URL saat komponen diinisialisasi
@@ -78,9 +75,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
         if (qpPage) {
           this.pagination.currentPage = Number(qpPage);
         }
-        if (this.searchParams.group) {
-          this.groupSearchTerm = this.searchParams.group;
-        }
+        // Group value is bound directly to the autocomplete via searchParams.group
         if (this.searchParams.searchTerm || this.searchParams.status || this.searchParams.group) {
           this.loadEmployees();
         }
@@ -179,24 +174,8 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     });
   }
 
-  filterGroups(): void {
-    const term = this.groupSearchTerm.toLowerCase();
-    this.filteredGroups = this.groups.filter(group =>
-      group.name.toLowerCase().includes(term)
-    );
-  }
-
-  selectGroup(group: EmployeeGroup): void {
-    this.searchParams.group = group.name;
-    this.groupSearchTerm = group.name;
-    this.showGroupDropdown = false;
-    this.onSearch();
-  }
-
   clearGroupFilter(): void {
     this.searchParams.group = '';
-    this.groupSearchTerm = '';
-    this.showGroupDropdown = false;
     this.onSearch();
   }
 
@@ -262,26 +241,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     return employee.id || index;
   }
 
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'Active':
-        return 'bg-green-100 text-green-800';
-      case 'Inactive':
-        return 'bg-red-100 text-red-800';
-      case 'On Leave':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Probation':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  }
-
-  onInputBlur() {
-    setTimeout(() => {
-      this.showGroupDropdown = false;
-    }, 150);
-  }
+  
 
 
   // Make Math available in template

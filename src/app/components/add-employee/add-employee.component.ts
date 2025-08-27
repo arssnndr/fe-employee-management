@@ -28,9 +28,7 @@ export class AddEmployeeComponent implements OnInit {
   };
 
   groups: EmployeeGroup[] = [];
-  filteredGroups: EmployeeGroup[] = [];
-  groupSearchTerm = '';
-  showGroupDropdown = false;
+  // GroupAutocomplete handles its own filtering and dropdown UI
   isLoading = false;
   maxDate: string = '';
 
@@ -59,7 +57,6 @@ export class AddEmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.groups = this.employeeService.getGroups();
-    this.filteredGroups = [...this.groups];
     
     // Set max date to today
     const today = new Date();
@@ -143,24 +140,8 @@ export class AddEmployeeComponent implements OnInit {
     return isValid;
   }
 
-  filterGroups(): void {
-    const term = this.groupSearchTerm.toLowerCase();
-    this.filteredGroups = this.groups.filter(group => 
-      group.name.toLowerCase().includes(term)
-    );
-  }
-
-  selectGroup(group: EmployeeGroup): void {
-    this.employee.group = group.name;
-    this.groupSearchTerm = group.name;
-    this.showGroupDropdown = false;
-    this.formErrors.group = ''; // Clear error when group is selected
-  }
-
   clearGroupFilter(): void {
     this.employee.group = '';
-    this.groupSearchTerm = '';
-    this.showGroupDropdown = false;
   }
 
   onSubmit(): void {
@@ -210,9 +191,5 @@ export class AddEmployeeComponent implements OnInit {
     }).format(amount);
   }
 
-  onInputBlur() {
-    setTimeout(() => {
-      this.showGroupDropdown = false;
-    }, 150);
-  }
+  
 }

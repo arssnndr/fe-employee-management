@@ -87,21 +87,6 @@ export class EmployeeDetailComponent implements OnInit {
     return age;
   }
 
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'Active':
-        return 'bg-green-100 text-green-800';
-      case 'Inactive':
-        return 'bg-red-100 text-red-800';
-      case 'On Leave':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Probation':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  }
-
   getInitials(firstName: string, lastName: string): string {
     return firstName.charAt(0) + lastName.charAt(0);
   }
