@@ -1,0 +1,10 @@
+{
+    "$schema": "https://openapi.vercel.sh/microfrontends.json",
+    "applications": {
+        "employee-management": {
+            "development": {
+                "fallback": "www.port-aris.my.id"
+            }
+        }
+    }
+}
