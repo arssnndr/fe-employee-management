@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notification.service';
 import { ButtonConfig, Employee, EmployeeGroup } from '../../models/employee.interface';
-import { HeaderComponent } from '../header/header.component';
+import { HeaderComponent } from '../shared/header/header.component';
+import { GroupAutocompleteComponent } from '../shared/group-autocomplete/group-autocomplete.component';
 
 @Component({
   selector: 'app-add-employee',
-  imports: [CommonModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent, GroupAutocompleteComponent],
   templateUrl: './add-employee.component.html'
 })
 export class AddEmployeeComponent implements OnInit {

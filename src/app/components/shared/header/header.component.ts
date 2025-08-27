@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonConfig } from '../../models/employee.interface';
 import { NgClass } from '@angular/common';
+import { ButtonConfig } from '../../../models/employee.interface';
 
 @Component({
   selector: 'app-header',

@@ -4,11 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notification.service';
 import { ButtonConfig, Employee } from '../../models/employee.interface';
-import { HeaderComponent } from '../header/header.component';
+import { HeaderComponent } from '../shared/header/header.component';
+import { StatusBadgeComponent } from '../shared/status-badge/status-badge.component';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-employee-detail',
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, StatusBadgeComponent, LoadingSpinnerComponent],
   templateUrl: './employee-detail.component.html'
 })
 export class EmployeeDetailComponent implements OnInit {

@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DialogService, DialogOptions } from '../../services/dialog.service';
 import { Subscription } from 'rxjs';
+import { DialogOptions, DialogService } from '../../../services/dialog.service';
 
 @Component({
     selector: 'app-dialog',

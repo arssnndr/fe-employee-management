@@ -6,13 +6,16 @@ import { EmployeeService } from '../../services/employee.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams, ButtonConfig } from '../../models/employee.interface';
-import { HeaderComponent } from "../header/header.component";
+import { HeaderComponent } from "../shared/header/header.component";
+import { StatusBadgeComponent } from "../shared/status-badge/status-badge.component";
+import { LoadingSpinnerComponent } from "../shared/loading-spinner/loading-spinner.component";
+import { GroupAutocompleteComponent } from "../shared/group-autocomplete/group-autocomplete.component";
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee-list',
-  imports: [CommonModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent, StatusBadgeComponent, LoadingSpinnerComponent, GroupAutocompleteComponent],
   templateUrl: './employee-list.component.html'
 })
 export class EmployeeListComponent implements OnInit, OnDestroy {
