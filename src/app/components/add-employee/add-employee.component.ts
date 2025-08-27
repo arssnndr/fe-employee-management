@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notification.service';
 import { ButtonConfig, Employee, EmployeeGroup } from '../../models/employee.interface';
-import { HeaderComponent } from '../../shared/header/header.component';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-add-employee',

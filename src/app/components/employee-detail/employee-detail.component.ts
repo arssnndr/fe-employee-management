@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notification.service';
 import { ButtonConfig, Employee } from '../../models/employee.interface';
-import { HeaderComponent } from '../../shared/header/header.component';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-employee-detail',

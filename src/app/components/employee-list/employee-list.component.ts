@@ -6,7 +6,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams, ButtonConfig } from '../../models/employee.interface';
-import { HeaderComponent } from "../../shared/header/header.component";
+import { HeaderComponent } from "../header/header.component";
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
