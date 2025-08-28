@@ -241,9 +241,6 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     return employee.id || index;
   }
 
-  
-
-
   // Make Math available in template
   Math = Math;
 

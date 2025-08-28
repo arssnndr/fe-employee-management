@@ -53,11 +53,11 @@ export class AddEmployeeComponent implements OnInit {
     private employeeService: EmployeeService,
     private router: Router,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.groups = this.employeeService.getGroups();
-    
+
     // Set max date to today
     const today = new Date();
     this.maxDate = today.toISOString().split('T')[0];
@@ -190,6 +190,4 @@ export class AddEmployeeComponent implements OnInit {
       minimumFractionDigits: 0
     }).format(amount);
   }
-
-  
 }

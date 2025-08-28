@@ -157,7 +157,7 @@ Catatan: Kredensial di atas berasal dari seed database backend.
 
 ```ts
 export const environment = {
-  API_BASE_URL: "https://em-express-api.vercel.app/api",
+  API_BASE_URL: "https://be-employee-management.vercel.app/api",
 };
 ```
 
@@ -191,13 +191,13 @@ export const environment = {
 
 ## 🖧 Menjalankan Backend API (Lokal)
 
-Backend yang digunakan: `em-express-api` (Express + Supabase). Ikuti langkah berikut untuk menjalankannya secara lokal:
+Backend yang digunakan: `be-employee-management` (Express + Supabase). Ikuti langkah berikut untuk menjalankannya secara lokal:
 
 1. **Clone repository backend**
 
    ```bash
-   git clone https://github.com/arssnndr/em-express-api.git
-   cd em-express-api
+  git clone https://github.com/arssnndr/be-employee-management.git
+  cd be-employee-management
    ```
 
 2. **Install dependencies**
