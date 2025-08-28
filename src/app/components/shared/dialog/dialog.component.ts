@@ -60,6 +60,22 @@ export class DialogComponent implements OnDestroy {
         this.dialogService.close();
     }
 
+    ok() {
+        if (this.current?.confirm) {
+            this.dialogService.confirmResolve(true);
+        } else {
+            this.dialogService.close();
+        }
+    }
+
+    cancel() {
+        if (this.current?.confirm) {
+            this.dialogService.confirmResolve(false);
+        } else {
+            this.dialogService.close();
+        }
+    }
+
     ngOnDestroy(): void {
         this.sub.unsubscribe();
     }

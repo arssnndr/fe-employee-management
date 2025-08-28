@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
+import { DialogService } from '../../services/dialog.service';
 import { Employee, EmployeeGroup, PaginationData, EmployeeSearchParams, ButtonConfig } from '../../models/employee.interface';
 import { HeaderComponent } from "../shared/header/header.component";
 import { StatusBadgeComponent } from "../shared/status-badge/status-badge.component";
@@ -49,12 +50,17 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     label: 'Logout',
   }
 
+  // Track IDs currently being deleted to prevent double submissions and disable UI
+  private deletingIds = new Set<number>();
+
   constructor(
     private employeeService: EmployeeService,
     private authService: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private notificationService: NotificationService
+  ,
+  private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
@@ -219,7 +225,49 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(employee: Employee): void {
-    this.notificationService.error(`Delete karyawan: ${employee.firstName} ${employee.lastName}`);
+    if (!employee.id) {
+      this.notificationService.error('Employee ID tidak tersedia');
+      return;
+    }
+
+    this.dialogService.confirm({
+      title: 'Konfirmasi Hapus',
+      message: `Yakin ingin menghapus karyawan: ${employee.firstName} ${employee.lastName}?`,
+      type: 'warning',
+      okText: 'Hapus',
+      cancelText: 'Batal'
+  }).subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      // proceed with deletion
+      if (this.deletingIds.has(employee.id)) return; // already deleting
+      this.deletingIds.add(employee.id);
+
+      this.employeeService.deleteEmployee(employee.id!).subscribe({
+        next: () => {
+          this.deletingIds.delete(employee.id!);
+          this.notificationService.success(`Berhasil menghapus ${employee.firstName} ${employee.lastName}`);
+          // Optimistically remove from local list and update pagination
+          this.employees = this.employees.filter(e => e.id !== employee.id);
+          this.pagination.totalItems = Math.max(0, this.pagination.totalItems - 1);
+
+          // If page is empty after deletion and there are previous pages, reload previous page
+          if (this.employees.length === 0 && this.pagination.currentPage > 1) {
+            this.pagination.currentPage = Math.max(1, this.pagination.currentPage - 1);
+            this.loadEmployees();
+          }
+        },
+        error: (err) => {
+          this.deletingIds.delete(employee.id!);
+          console.error('Delete employee error', err);
+          this.notificationService.error('Gagal menghapus karyawan');
+        }
+      });
+    });
+  }
+
+  isDeleting(id?: number): boolean {
+    return !!id && this.deletingIds.has(id);
   }
 
   viewEmployeeDetail(employeeId: number): void {
