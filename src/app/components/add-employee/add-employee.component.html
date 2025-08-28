@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-50">
   <!-- Header -->
-  <app-header title="Tambah Karyawan" description="Masukkan data karyawan baru"
+  <app-header [title]="isEditMode ? 'Edit Karyawan' : 'Tambah Karyawan'" description="Masukkan data karyawan baru"
     [buttonConfig]="buttonConfig" (buttonClick)="cancel()">
   </app-header>
 
@@ -114,13 +114,9 @@
             <label for="group" class="block text-sm font-medium text-gray-700 mb-2">
               Grup/Departemen <span class="text-red-500">*</span>
             </label>
-            <app-group-autocomplete
-              [(ngModel)]="employee.group"
-              [items]="groups"
-              placeholder="Pilih atau ketik grup..."
-              (selected)="formErrors.group = ''"
-              (cleared)="clearGroupFilter()"
-            ></app-group-autocomplete>
+            <app-group-autocomplete name="group" [(ngModel)]="employee.group" [items]="groups"
+              placeholder="Pilih atau ketik grup..." (selected)="formErrors.group = ''"
+              (cleared)="clearGroupFilter()"></app-group-autocomplete>
             <p *ngIf="formErrors.group" class="mt-1 text-sm text-red-600">
               {{ formErrors.group }}
             </p>
@@ -172,7 +168,7 @@
             <span *ngIf="isLoading" class="animate-spin mr-2">
               <img class="h-4 w-4" src="/assets/icons/loader.svg" alt="loader">
             </span>
-            {{ isLoading ? "Menyimpan..." : "Simpan" }}
+            {{ isLoading ? (isEditMode ? 'Menyimpan...' : 'Menyimpan...') : (isEditMode ? 'Perbarui' : 'Simpan') }}
           </button>
         </div>
       </form>

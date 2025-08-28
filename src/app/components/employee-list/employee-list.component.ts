@@ -59,8 +59,8 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private notificationService: NotificationService
-  ,
-  private dialogService: DialogService
+    ,
+    private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
@@ -221,7 +221,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   }
 
   onEdit(employee: Employee): void {
-    this.notificationService.warning(`Edit karyawan: ${employee.firstName} ${employee.lastName}`);
+    this.router.navigate(['/employees', employee.id, 'edit']);
   }
 
   onDelete(employee: Employee): void {
@@ -236,7 +236,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
       type: 'warning',
       okText: 'Hapus',
       cancelText: 'Batal'
-  }).subscribe((confirmed: boolean) => {
+    }).subscribe((confirmed: boolean) => {
       if (!confirmed) return;
 
       // proceed with deletion

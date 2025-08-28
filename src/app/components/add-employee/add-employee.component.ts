@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notification.service';
+import { DialogService } from '../../services/dialog.service';
 import { ButtonConfig, Employee, EmployeeGroup } from '../../models/employee.interface';
 import { HeaderComponent } from '../shared/header/header.component';
 import { GroupAutocompleteComponent } from '../shared/group-autocomplete/group-autocomplete.component';
@@ -31,6 +32,8 @@ export class AddEmployeeComponent implements OnInit {
   // GroupAutocomplete handles its own filtering and dropdown UI
   isLoading = false;
   maxDate: string = '';
+  // Edit mode
+  isEditMode = false;
 
   // Form validation flags
   formErrors = {
@@ -52,7 +55,9 @@ export class AddEmployeeComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private router: Router,
-    private notificationService: NotificationService
+    private activatedRoute: ActivatedRoute,
+    private notificationService: NotificationService,
+    private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
@@ -61,6 +66,25 @@ export class AddEmployeeComponent implements OnInit {
     // Set max date to today
     const today = new Date();
     this.maxDate = today.toISOString().split('T')[0];
+
+    // If route has id param, we're in edit mode
+    const idParam = this.activatedRoute.snapshot.paramMap.get('id');
+    if (idParam) {
+      const id = Number(idParam);
+      this.isEditMode = true;
+      this.isLoading = true;
+      this.employeeService.getEmployeeById(id).subscribe({
+        next: (e) => {
+          this.employee = e;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.notificationService.error('Gagal memuat data karyawan');
+          this.isLoading = false;
+          this.router.navigate(['/employees']);
+        }
+      });
+    }
   }
 
   validateForm(): boolean {
@@ -150,22 +174,48 @@ export class AddEmployeeComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
-
-    this.employeeService.addEmployee(this.employee).subscribe({
-      next: () => {
-        this.notificationService.success(`Karyawan ${this.employee.firstName} ${this.employee.lastName} berhasil ditambahkan`);
-        this.router.navigate(['/employees']);
-      },
-      error: (err) => {
-        const message = err?.error?.message || 'Gagal menambahkan karyawan';
-        this.notificationService.error(message);
-        this.isLoading = false;
-      },
-      complete: () => {
-        this.isLoading = false;
-      }
-    });
+    if (this.isEditMode) {
+      this.dialogService.confirm({
+        title: 'Konfirmasi Perbarui',
+        message: `Yakin ingin memperbarui karyawan: ${this.employee.firstName} ${this.employee.lastName}?`,
+        type: 'warning',
+        okText: 'Perbarui',
+        cancelText: 'Batal'
+      }).subscribe((confirmed: boolean) => {
+        if (!confirmed) return;
+        this.isLoading = true;
+        this.employeeService.updateEmployee$(this.employee).subscribe({
+          next: () => {
+            this.notificationService.success(`Karyawan ${this.employee.firstName} ${this.employee.lastName} berhasil diperbarui`);
+            this.router.navigate(['/employees']);
+          },
+          error: (err) => {
+            const message = err?.error?.message || 'Gagal memperbarui karyawan';
+            this.notificationService.error(message);
+            this.isLoading = false;
+          },
+          complete: () => {
+            this.isLoading = false;
+          }
+        });
+      });
+    } else {
+      this.isLoading = true;
+      this.employeeService.addEmployee(this.employee).subscribe({
+        next: () => {
+          this.notificationService.success(`Karyawan ${this.employee.firstName} ${this.employee.lastName} berhasil ditambahkan`);
+          this.router.navigate(['/employees']);
+        },
+        error: (err) => {
+          const message = err?.error?.message || 'Gagal menambahkan karyawan';
+          this.notificationService.error(message);
+          this.isLoading = false;
+        },
+        complete: () => {
+          this.isLoading = false;
+        }
+      });
+    }
   }
 
   cancel(): void {

@@ -25,7 +25,7 @@ export class EmployeeService {
     { id: 10, name: 'Project Management' }
   ];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Map field sorting from UI (camelCase) to DB columns (snake_case)
   private mapSortField(field?: string): string | undefined {
@@ -120,8 +120,36 @@ export class EmployeeService {
   }
 
   updateEmployee(employee: Employee): void {
-    // Not implemented in backend sample; implement when API available (PUT/PATCH)
-    console.warn('updateEmployee not implemented on API');
+    // Implemented below to return Observable when API is available
+    throw new Error('Use updateEmployee$ which returns Observable');
+  }
+
+  updateEmployee$(employee: Employee): Observable<Employee> {
+    const payload: any = {
+      username: employee.username,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      email: employee.email,
+      birthDate: employee.birthDate,
+      basicSalary: employee.basicSalary,
+      status: employee.status,
+      group: employee.group,
+      description: employee.description
+    };
+    return this.http.patch<any>(`${environment.API_BASE_URL}/employees/${employee.id}`, payload).pipe(
+      map((e: any): Employee => ({
+        id: e.id,
+        username: e.username,
+        firstName: e.first_name,
+        lastName: e.last_name,
+        email: e.email,
+        birthDate: new Date(e.birth_date),
+        basicSalary: e.basic_salary,
+        status: e.status,
+        group: e.group_name,
+        description: e.description,
+      }))
+    );
   }
 
   deleteEmployee(id: number): Observable<void> {
