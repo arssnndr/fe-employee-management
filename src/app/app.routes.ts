@@ -5,6 +5,7 @@ import { AddEmployeeComponent } from './components/add-employee/add-employee.com
 import { EmployeeDetailComponent } from './components/employee-detail/employee-detail.component';
 import { authGuard } from './guards/auth.guard';
 import { RegisterComponent } from './components/register/register.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/employees', pathMatch: 'full' },
@@ -14,5 +15,5 @@ export const routes: Routes = [
   { path: 'employees/add', component: AddEmployeeComponent, canActivate: [authGuard] },
   { path: 'employees/:id/edit', component: AddEmployeeComponent, canActivate: [authGuard] },
   { path: 'employees/:id', component: EmployeeDetailComponent, canActivate: [authGuard] },
-  { path: '**', redirectTo: '/employees' }
+  { path: '**', component: PageNotFoundComponent }
 ];
