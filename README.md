@@ -113,8 +113,8 @@ src/
 1. **Clone repository**
 
    ```bash
-   git clone https://github.com/arssnndr/employee-management.git
-   cd employee-management
+   git clone https://github.com/arssnndr/fe-employee-management.git
+   cd fe-employee-management
    ```
 
 2. **Install dependencies**
@@ -140,7 +140,7 @@ src/
 
 ```bash
 npm run build
-# hasil build ada di: dist/employee-management/
+# hasil build ada di: dist/fe-employee-management/
 ```
 
 ### Login Credentials
@@ -241,13 +241,13 @@ Backend yang digunakan: `be-employee-management` (Express + Supabase). Ikuti lan
    - Semua endpoint berada di path `/api/*` (contoh: `http://localhost:3000/api/employees`)
 
 5. **Hubungkan dengan Frontend**
-   - Pastikan `employee-management/src/environments/environment.development.ts` berisi:
+   - Pastikan `fe-employee-management/src/environments/environment.development.ts` berisi:
      ```ts
      export const environment = {
        API_BASE_URL: "http://localhost:3000/api",
      };
      ```
-   - Jalankan frontend: `npm start` pada folder `employee-management`, lalu akses `http://localhost:4200`.
+   - Jalankan frontend: `npm start` pada folder `fe-employee-management`, lalu akses `http://localhost:4200`.
 
 ## 🎨 Fitur UI/UX
 

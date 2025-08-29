@@ -9,5 +9,5 @@ import { DialogComponent } from './components/shared/dialog/dialog.component';
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'employee-management';
+  title = 'fe-employee-management';
 }

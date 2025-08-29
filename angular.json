@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "employee-management": {
+    "fe-employee-management": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/employee-management",
+            "outputPath": "dist/fe-employee-management",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "employee-management:build:production"
+              "buildTarget": "fe-employee-management:build:production"
             },
             "development": {
-              "buildTarget": "employee-management:build:development"
+              "buildTarget": "fe-employee-management:build:development"
             }
           },
           "defaultConfiguration": "development"
