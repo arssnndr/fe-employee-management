@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration production --base-href /employee-management/",
+    "build:vercel": "ng build --configuration production",
+    "vercel-build": "npm run build:vercel",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

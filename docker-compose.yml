@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  fe-employee-management:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fe-employee-management
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - employee-management-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fe-employee-management.rule=Host(`localhost`)"
+      - "traefik.http.services.fe-employee-management.loadbalancer.server.port=80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Nginx reverse proxy (if you want to use external nginx)
+  # nginx-proxy:
+  #   image: nginx:alpine
+  #   container_name: nginx-proxy
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - fe-employee-management
+  #   networks:
+  #     - employee-management-network
+  #   restart: unless-stopped
+
+networks:
+  employee-management-network:
+    driver: bridge
+
+# Optional: Add volumes for persistence if needed
+# volumes:
+#   nginx-logs:
+#     driver: local
