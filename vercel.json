@@ -9,37 +9,39 @@
       }
     }
   ],
-  "routes": [
+  "redirects": [
     {
-      "src": "/employee-management$",
-      "status": 301,
-      "headers": { "Location": "/employee-management/" }
+      "source": "/employee-management",
+      "destination": "/employee-management/",
+      "permanent": true
     },
     {
-      "src": "/employee-management/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))$",
-      "dest": "/$1"
+      "source": "/",
+      "destination": "/employee-management/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/employee-management/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
+      "destination": "/$1"
     },
     {
-      "src": "/employee-management/assets/(.*)$",
-      "dest": "/assets/$1"
+      "source": "/employee-management/assets/(.*)",
+      "destination": "/assets/$1"
     },
     {
-      "src": "/employee-management/(.*)$",
-      "dest": "/employee-management/index.html"
+      "source": "/employee-management/(.*)",
+      "destination": "/employee-management/index.html"
     },
     {
-      "src": "/$",
-      "status": 301,
-      "headers": { "Location": "/employee-management/" }
-    },
-    {
-      "src": "/(.*)$",
-      "dest": "/employee-management/index.html"
+      "source": "/(.*)",
+      "destination": "/employee-management/index.html"
     }
   ],
   "headers": [
     {
-      "source": "/(.*\\.(js|mjs))$",
+      "source": "/(.*\\.(js|mjs))",
       "headers": [
         {
           "key": "Content-Type",
@@ -48,7 +50,7 @@
       ]
     },
     {
-      "source": "/(.*\\.css)$",
+      "source": "/(.*\\.css)",
       "headers": [
         {
           "key": "Content-Type",
