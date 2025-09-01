@@ -23,8 +23,52 @@
   ],
   "rewrites": [
     {
-      "source": "/employee-management/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
-      "destination": "/$1"
+      "source": "/employee-management/(.*).js",
+      "destination": "/$1.js"
+    },
+    {
+      "source": "/employee-management/(.*).css",
+      "destination": "/$1.css"
+    },
+    {
+      "source": "/employee-management/(.*).ico",
+      "destination": "/$1.ico"
+    },
+    {
+      "source": "/employee-management/(.*).png",
+      "destination": "/$1.png"
+    },
+    {
+      "source": "/employee-management/(.*).jpg",
+      "destination": "/$1.jpg"
+    },
+    {
+      "source": "/employee-management/(.*).jpeg",
+      "destination": "/$1.jpeg"
+    },
+    {
+      "source": "/employee-management/(.*).gif",
+      "destination": "/$1.gif"
+    },
+    {
+      "source": "/employee-management/(.*).svg",
+      "destination": "/$1.svg"
+    },
+    {
+      "source": "/employee-management/(.*).woff",
+      "destination": "/$1.woff"
+    },
+    {
+      "source": "/employee-management/(.*).woff2",
+      "destination": "/$1.woff2"
+    },
+    {
+      "source": "/employee-management/(.*).ttf",
+      "destination": "/$1.ttf"
+    },
+    {
+      "source": "/employee-management/(.*).eot",
+      "destination": "/$1.eot"
     },
     {
       "source": "/employee-management/assets/(.*)",
@@ -41,7 +85,7 @@
   ],
   "headers": [
     {
-      "source": "/(.*\\.(js|mjs))",
+      "source": "/(.*).js",
       "headers": [
         {
           "key": "Content-Type",
@@ -50,7 +94,16 @@
       ]
     },
     {
-      "source": "/(.*\\.css)",
+      "source": "/(.*).mjs",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/(.*).css",
       "headers": [
         {
           "key": "Content-Type",
