@@ -9,13 +9,13 @@ Sistem manajemen karyawan yang dibangun menggunakan Angular 19, SCSS, dan Tailwi
 ## Preview:
 
 <p align="center">Login Page:</p>
-<img src="https://www.port-aris.my.id/assets/images/login-page.png" alt="Login Page">
+<img src="https://www.port-aris.my.id/employee-management/assets/images/login-page.png" alt="Login Page">
 <p align="center">List Employee:</p>
-<img src="https://www.port-aris.my.id/assets/images/list-page.png" alt="List Page">
+<img src="https://www.port-aris.my.id/employee-management/assets/images/list-page.png" alt="List Page">
 <p align="center">Add Employee:</p>
-<img src="https://www.port-aris.my.id/assets/images/add-page.png" alt="Add Page">
+<img src="https://www.port-aris.my.id/employee-management/assets/images/add-page.png" alt="Add Page">
 <p align="center">Detail Employee:</p>
-<img src="https://www.port-aris.my.id/assets/images/detail-page.png" alt="Detail Page">
+<img src="https://www.port-aris.my.id/employee-management/assets/images/detail-page.png" alt="Detail Page">
 
 ## 🚀 Fitur
 
@@ -196,8 +196,8 @@ Backend yang digunakan: `be-employee-management` (Express + Supabase). Ikuti lan
 1. **Clone repository backend**
 
    ```bash
-  git clone https://github.com/arssnndr/be-employee-management.git
-  cd be-employee-management
+   git clone https://github.com/arssnndr/be-employee-management.git
+   cd be-employee-management
    ```
 
 2. **Install dependencies**
@@ -303,26 +303,32 @@ Semua endpoint diawali dengan base URL dari `environment.API_BASE_URL`.
 ## ❗ Troubleshooting
 
 - **CORS error (blocked by CORS policy)**
+
   - Pastikan backend `.env` berisi `CORS_ORIGIN=http://localhost:4200` (atau origin yang Anda gunakan)
   - Protokol dan port harus cocok persis (http vs https, 4200 vs custom)
 
 - **401 Unauthorized saat call API**
+
   - Pastikan login berhasil dan token tersimpan di `localStorage` sebagai `auth_token`
   - Interceptor menambahkan header Authorization otomatis (`src/app/interceptors/auth.interceptor.ts`)
   - `JWT_SECRET` backend harus valid dan konsisten; cek waktu sistem (clock skew)
 
 - **API tidak merespons / 404**
+
   - Base URL harus menyertakan prefix `/api`, contoh: `http://localhost:3000/api`
   - Cek `environment.development.ts` dan `environment.ts`
 
 - **Mixed content (HTTPS halaman → HTTP API)**
+
   - Jika frontend berjalan via HTTPS, gunakan API HTTPS juga, atau jalankan frontend HTTP saat dev
 
 - **Port bentrok**
+
   - Backend: ubah `PORT` di `.env` (default 3000)
   - Frontend: jalankan `ng serve --port 4300` jika 4200 digunakan proses lain
 
 - **Supabase key/URL belum diisi**
+
   - Set `SUPABASE_URL` dan `SUPABASE_ANON_KEY` di backend `.env`
 
 - **Versi Node tidak cocok**
