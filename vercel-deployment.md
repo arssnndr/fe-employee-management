@@ -1,12 +1,26 @@
-# Vercel Deployment untuk Employee Management Frontend
+# Vercel Deployment untuk Employee Management Frontend (Subpath)
 
-Dokumentasi untuk deploy aplikasi Angular Employee Management ke Vercel.
+Dokumentasi untuk deploy aplikasi Angular Employee Management ke Vercel dengan subpath `/employee-management/`.
 
-## 📋 Prerequisites
+## 🎯 Solusi Subpath Deployment
 
-- Account Vercel (gratis)
-- Repository di GitHub
-- Vercel CLI (optional)
+Aplikasi ini dikonfigurasi untuk berjalan di subpath `/employee-management/` di Vercel, yang memerlukan penanganan khusus untuk asset routing.
+
+### � Komponen Solusi:
+
+1. **Post-build Script**: `scripts/vercel-postbuild.js`
+   - Membuat duplikasi file di `/employee-management/` subdirectory
+   - Memperbaiki asset paths di `index.html`
+   - Memastikan file tersedia di kedua lokasi (root dan subpath)
+
+2. **Advanced Routing**: `vercel.json`
+   - Route `/employee-management/file.js` → `/file.js` (untuk asset di root)
+   - Route `/employee-management/*` → `/employee-management/index.html` (untuk Angular routing)
+   - Proper MIME type headers untuk JS/CSS files
+
+3. **Build Configuration**:
+   - Build dengan `--base-href /employee-management/`
+   - Post-processing untuk asset path rewriting
 
 ## 🚀 Deployment Steps
 

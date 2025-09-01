@@ -11,23 +11,49 @@
   ],
   "routes": [
     {
-      "src": "/employee-management$",
+      "src": "^/employee-management$",
       "dest": "/employee-management/"
     },
     {
-      "src": "/employee-management/(.*)",
+      "src": "^/employee-management/([^/]+\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))$",
       "dest": "/$1"
     },
     {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))$",
-      "dest": "/$1"
+      "src": "^/employee-management/assets/(.*)$",
+      "dest": "/assets/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "src": "^/employee-management/(.*)$",
+      "dest": "/employee-management/index.html"
+    },
+    {
+      "src": "^/$",
+      "dest": "/employee-management/"
+    },
+    {
+      "src": "^/(.*)$",
+      "dest": "/employee-management/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/(.*\\.(js|mjs))",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.css)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
