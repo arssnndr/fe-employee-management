@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
+import { IconComponent } from '../shared/icon/icon.component';
 
 @Component({
     selector: 'app-register',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, IconComponent],
     templateUrl: './register.component.html'
 })
 export class RegisterComponent {

@@ -8,10 +8,11 @@ import { DialogService } from '../../services/dialog.service';
 import { ButtonConfig, Employee, EmployeeGroup } from '../../models/employee.interface';
 import { HeaderComponent } from '../shared/header/header.component';
 import { GroupAutocompleteComponent } from '../shared/group-autocomplete/group-autocomplete.component';
+import { IconComponent } from '../shared/icon/icon.component';
 
 @Component({
   selector: 'app-add-employee',
-  imports: [CommonModule, FormsModule, HeaderComponent, GroupAutocompleteComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent, GroupAutocompleteComponent, IconComponent],
   templateUrl: './add-employee.component.html'
 })
 export class AddEmployeeComponent implements OnInit {
