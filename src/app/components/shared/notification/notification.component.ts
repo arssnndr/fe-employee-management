@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { NotificationService, Notification } from '../../../services/notification.service';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-notification',
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './notification.component.html'
 })
 export class NotificationComponent implements OnInit {

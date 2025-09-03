@@ -5,7 +5,7 @@
       <p class="text-sm font-medium">{{ notification.message }}</p>
       <button (click)="removeNotification(notification.id)"
         class="ml-2 text-white hover:text-gray-200 focus:outline-none">
-        <img class="w-4 h-4" src="assets/icons/close.svg" alt="close">
+        <app-icon name="close" classes="w-4 h-4"></app-icon>
       </button>
     </div>
     <p class="text-xs opacity-75 mt-1">{{ notification.timestamp | date:'short' }}</p>

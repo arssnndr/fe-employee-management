@@ -11,12 +11,13 @@ import { HeaderComponent } from "../shared/header/header.component";
 import { StatusBadgeComponent } from "../shared/status-badge/status-badge.component";
 import { LoadingSpinnerComponent } from "../shared/loading-spinner/loading-spinner.component";
 import { GroupAutocompleteComponent } from "../shared/group-autocomplete/group-autocomplete.component";
+import { IconComponent } from '../shared/icon/icon.component';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee-list',
-  imports: [CommonModule, FormsModule, HeaderComponent, StatusBadgeComponent, LoadingSpinnerComponent, GroupAutocompleteComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent, StatusBadgeComponent, LoadingSpinnerComponent, GroupAutocompleteComponent, IconComponent],
   templateUrl: './employee-list.component.html'
 })
 export class EmployeeListComponent implements OnInit, OnDestroy {

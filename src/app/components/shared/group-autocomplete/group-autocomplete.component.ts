@@ -2,6 +2,7 @@ import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { IconComponent } from '../icon/icon.component';
 
 export interface AutocompleteItem {
   name: string;
@@ -10,7 +11,7 @@ export interface AutocompleteItem {
 @Component({
   selector: 'app-group-autocomplete',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IconComponent],
   templateUrl: './group-autocomplete.component.html',
   providers: [
     {

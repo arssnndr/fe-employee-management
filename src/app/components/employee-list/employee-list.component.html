@@ -65,7 +65,7 @@
         </div>
         <button (click)="addEmployee()"
           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-          <img class="w-4 h-4 mr-2" src="assets/icons/plus.svg" alt="add">
+          <app-icon name="plus" class="w-4 h-4 mr-2" stroke="currentColor"></app-icon>
           Tambah Karyawan
         </button>
       </div>
@@ -178,7 +178,7 @@
                   [class]="'text-red-600 hover:text-red-900 hover:bg-gray-200 rounded-full px-1 transition-colors ' + (isDeleting(employee.id) ? 'opacity-50 cursor-not-allowed' : '')">
                   <span *ngIf="!isDeleting(employee.id)">Delete</span>
                   <span *ngIf="isDeleting(employee.id)" class="flex items-center gap-1">
-                    <img class="animate-spin h-4 w-4 text-red-600" src="assets/icons/spinner.svg" alt="loading">
+                    <app-icon name="spinner" class="animate-spin h-4 w-4 text-red-600" fill="currentColor"></app-icon>
                     Menghapus...
                   </span>
                 </button>
@@ -190,7 +190,7 @@
 
       <!-- Empty State -->
       <div *ngIf="employees.length === 0" class="text-center py-12">
-        <img class="mx-auto h-12 w-12 text-gray-400" src="assets/icons/users-empty.svg" alt="no employees">
+        <app-icon name="users-empty" class="mx-auto h-12 w-12 text-gray-400" fill="currentColor"></app-icon>
         <h3 class="mt-2 text-sm font-medium text-gray-900">
           Tidak ada karyawan
         </h3>
@@ -237,7 +237,7 @@
               <button [disabled]="pagination.currentPage === 1" (click)="onPageChange(pagination.currentPage - 1)"
                 class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                 <span class="sr-only">Previous</span>
-                <img class="h-5 w-5" src="assets/icons/chevron-left.svg" alt="previous">
+                <app-icon name="chevron-left" class="h-5 w-5" fill="currentColor"></app-icon>
               </button>
               <button *ngFor="let page of getPaginationPages()" (click)="onPageChange(page)" [class]="
                   'relative inline-flex items-center px-4 py-2 border text-sm font-medium ' +
@@ -251,7 +251,7 @@
                 (click)="onPageChange(pagination.currentPage + 1)"
                 class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                 <span class="sr-only">Next</span>
-                <img class="h-5 w-5" src="assets/icons/chevron-right.svg" alt="next">
+                <app-icon name="chevron-right" class="h-5 w-5" fill="currentColor"></app-icon>
               </button>
             </nav>
           </div>
