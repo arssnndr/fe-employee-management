@@ -65,9 +65,7 @@
         </div>
         <button (click)="addEmployee()"
           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-          </svg>
+          <img class="w-4 h-4 mr-2" src="assets/icons/plus.svg" alt="add">
           Tambah Karyawan
         </button>
       </div>
@@ -180,11 +178,7 @@
                   [class]="'text-red-600 hover:text-red-900 hover:bg-gray-200 rounded-full px-1 transition-colors ' + (isDeleting(employee.id) ? 'opacity-50 cursor-not-allowed' : '')">
                   <span *ngIf="!isDeleting(employee.id)">Delete</span>
                   <span *ngIf="isDeleting(employee.id)" class="flex items-center gap-1">
-                    <svg class="animate-spin h-4 w-4 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-                      viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                    </svg>
+                    <img class="animate-spin h-4 w-4 text-red-600" src="assets/icons/spinner.svg" alt="loading">
                     Menghapus...
                   </span>
                 </button>
@@ -196,10 +190,7 @@
 
       <!-- Empty State -->
       <div *ngIf="employees.length === 0" class="text-center py-12">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
+        <img class="mx-auto h-12 w-12 text-gray-400" src="assets/icons/users-empty.svg" alt="no employees">
         <h3 class="mt-2 text-sm font-medium text-gray-900">
           Tidak ada karyawan
         </h3>
@@ -246,11 +237,7 @@
               <button [disabled]="pagination.currentPage === 1" (click)="onPageChange(pagination.currentPage - 1)"
                 class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                 <span class="sr-only">Previous</span>
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd"
-                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                    clip-rule="evenodd" />
-                </svg>
+                <img class="h-5 w-5" src="assets/icons/chevron-left.svg" alt="previous">
               </button>
               <button *ngFor="let page of getPaginationPages()" (click)="onPageChange(page)" [class]="
                   'relative inline-flex items-center px-4 py-2 border text-sm font-medium ' +
@@ -264,11 +251,7 @@
                 (click)="onPageChange(pagination.currentPage + 1)"
                 class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                 <span class="sr-only">Next</span>
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd" />
-                </svg>
+                <img class="h-5 w-5" src="assets/icons/chevron-right.svg" alt="next">
               </button>
             </nav>
           </div>

@@ -5,9 +5,7 @@
       <p class="text-sm font-medium">{{ notification.message }}</p>
       <button (click)="removeNotification(notification.id)"
         class="ml-2 text-white hover:text-gray-200 focus:outline-none">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
+        <img class="w-4 h-4" src="assets/icons/close.svg" alt="close">
       </button>
     </div>
     <p class="text-xs opacity-75 mt-1">{{ notification.timestamp | date:'short' }}</p>
