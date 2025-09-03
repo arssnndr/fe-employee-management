@@ -49,7 +49,7 @@
       <div class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-            <img class="w-5 h-5 mr-2 text-blue-600" src="assets/icons/user.svg" alt="user">
+            <app-icon name="user" classes="w-5 h-5 mr-2 text-blue-600"></app-icon>
             Informasi Personal
           </h3>
         </div>
@@ -89,7 +89,7 @@
       <div class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-            <img class="w-5 h-5 mr-2 text-green-600" src="assets/icons/briefcase.svg" alt="work">
+            <app-icon name="briefcase" classes="w-5 h-5 mr-2 text-green-600"></app-icon>
             Informasi Pekerjaan
           </h3>
         </div>
@@ -118,7 +118,7 @@
     <div class="mt-6 bg-white rounded-lg shadow">
       <div class="px-6 py-4 border-b border-gray-200">
         <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-          <img class="w-5 h-5 mr-2 text-purple-600" src="assets/icons/document.svg" alt="description">
+          <app-icon name="document" classes="w-5 h-5 mr-2 text-purple-600"></app-icon>
           Deskripsi
         </h3>
       </div>
@@ -139,7 +139,7 @@
   <!-- Error State -->
   <div *ngIf="!isLoading && !employee" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="bg-white rounded-lg shadow p-8 text-center">
-      <img class="mx-auto h-12 w-12 text-gray-400" src="assets/icons/warning.svg" alt="warning">
+      <app-icon name="warning" classes="mx-auto h-12 w-12 text-gray-400"></app-icon>
       <h3 class="mt-4 text-lg font-medium text-gray-900">
         Karyawan tidak ditemukan
       </h3>

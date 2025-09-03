@@ -7,10 +7,11 @@ import { ButtonConfig, Employee } from '../../models/employee.interface';
 import { HeaderComponent } from '../shared/header/header.component';
 import { StatusBadgeComponent } from '../shared/status-badge/status-badge.component';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
+import { IconComponent } from '../shared/icon/icon.component';
 
 @Component({
   selector: 'app-employee-detail',
-  imports: [CommonModule, HeaderComponent, StatusBadgeComponent, LoadingSpinnerComponent],
+  imports: [CommonModule, HeaderComponent, StatusBadgeComponent, LoadingSpinnerComponent, IconComponent],
   templateUrl: './employee-detail.component.html'
 })
 export class EmployeeDetailComponent implements OnInit {
@@ -79,11 +80,11 @@ export class EmployeeDetailComponent implements OnInit {
     const birth = new Date(birthDate);
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
       age--;
     }
-    
+
     return age;
   }
 
